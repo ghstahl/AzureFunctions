@@ -1,0 +1,8 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "p7graph_RootManageSharedAccessKey_SERVICEBUS": null,
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=p7funcappplanab7f;AccountKey=+xWLVQsqKs+4NfiqXC9Os1uNH6TZd9bbUHx7xUamd59r/rCgXodtJv1UrtYbdR38bOwgXEvQ66Vp70OG9755gw==",
+    "AzureWebJobsDashboard": "DefaultEndpointsProtocol=https;AccountName=p7funcappplanab7f;AccountKey=+xWLVQsqKs+4NfiqXC9Os1uNH6TZd9bbUHx7xUamd59r/rCgXodtJv1UrtYbdR38bOwgXEvQ66Vp70OG9755gw=="
+  }
+}
