@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Gremlin.Net;
 using Microsoft.Azure.WebJobs;
@@ -72,7 +71,7 @@ namespace FunctionAppGraph
 
         [FunctionName("NortonGraphHttpTrigger")]
         public static async Task RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous,new []{"GET"}, WebHookType = "genericJson")] HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequestMessage req,
             TraceWriter log)
         {
             string graphDbConnectionString = ConfigurationManager.AppSettings["graphdbconnectionstring"];
