@@ -20,6 +20,37 @@ namespace ConsoleApp.AzureGremlin
         {
             { "Cleanup",        "g.V().drop()" },
 
+            { "AddVertex user 1",    "g.addV('person').property('id', 'fran').property('firstName', 'Fran').property('age', 44)" },
+            { "AddVertex user 2",    "g.addV('person').property('id', 'spencer').property('firstName', 'Spencer').property('age', 44)" },
+
+            { "AddVertex entitlement 1",    "g.addV('entitlement').property('id', 'F-entitlement-1234').property('template', 'Security Level One').property('seats', 3)" },
+            { "AddVertex entitlement 2",    "g.addV('entitlement').property('id', 'S-entitlement-1234').property('template', 'Security Level One').property('seats', 3)" },
+
+            { "AddVertex entitlement 3",    "g.addV('entitlement').property('id', 'F-entitlement-2345').property('template', 'Security Level two').property('seats', 3)" },
+            { "AddVertex entitlement 4",    "g.addV('entitlement').property('id', 'S-entitlement-2345').property('template', 'Security Level two').property('seats', 3)" },
+
+            { "AddEdge ownership 1",      "g.V('fran').addE('owns').to(g.V('F-entitlement-1234'))" },
+            { "AddEdge ownership 2",      "g.V('fran').addE('owns').to(g.V('F-entitlement-2345'))" },
+            { "AddEdge ownership 3",      "g.V('spencer').addE('owns').to(g.V('S-entitlement-1234'))" },
+            { "AddEdge ownership 4",      "g.V('spencer').addE('owns').to(g.V('S-entitlement-2345'))" },
+
+
+
+            { "AddVertex seat 1",    "g.addV('seat').property('id', 'F-Seat-1234').property('productInstanceId', 'F-productInstanceId-1234')" },
+            { "AddVertex seat 2",    "g.addV('seat').property('id', 'F-Seat-2345').property('productInstanceId', 'F-productInstanceId-2345')" },
+            { "AddVertex seat 3",    "g.addV('seat').property('id', 'F-Seat-3456').property('productInstanceId', 'F-productInstanceId-3456')" },
+            { "AddVertex seat 4",    "g.addV('seat').property('id', 'S-Seat-1234').property('productInstanceId', 'S-productInstanceId-1234')" },
+            { "AddVertex seat 5",    "g.addV('seat').property('id', 'S-Seat-2345').property('productInstanceId', 'S-productInstanceId-2345')" },
+            { "AddVertex seat 6",    "g.addV('seat').property('id', 'S-Seat-3456').property('productInstanceId', 'S-productInstanceId-3456')" },
+
+            { "AddEdge ownership 5",      "g.V('F-entitlement-1234').addE('owns').to(g.V('F-Seat-1234'))" },
+            { "AddEdge ownership 6",      "g.V('F-entitlement-1234').addE('owns').to(g.V('F-Seat-2345'))" },
+            { "AddEdge ownership 7",      "g.V('F-entitlement-1234').addE('owns').to(g.V('F-Seat-3456'))" },
+
+            { "AddEdge ownership 8",      "g.V('S-entitlement-2345').addE('owns').to(g.V('S-Seat-1234'))" },
+            { "AddEdge ownership 9",      "g.V('S-entitlement-2345').addE('owns').to(g.V('S-Seat-2345'))" },
+            { "AddEdge ownership 10",     "g.V('S-entitlement-2345').addE('owns').to(g.V('S-Seat-3456'))" },
+
             { "AddVertex 1",    "g.addV('person').property('id', 'thomas').property('firstName', 'Thomas').property('age', 44)" },
             { "AddVertex 2",    "g.addV('person').property('id', 'mary').property('firstName', 'Mary').property('lastName', 'Andersen').property('age', 39)" },
             { "AddVertex 3",    "g.addV('person').property('id', 'ben').property('firstName', 'Ben').property('lastName', 'Miller')" },
@@ -55,8 +86,9 @@ namespace ConsoleApp.AzureGremlin
             { "DropEdge",       "g.V('thomas').outE('knows').where(inV().has('id', 'mary')).drop()" },
             { "CountEdges",     "g.E().count()" },
             { "DropVertex",     "g.V('thomas').drop()" },
+            { "Seat to owner",  "g.V('S-Seat-3456').repeat(__.in()).until(has('label', 'person')).emit().path()" },
         };
-
+  
 
         static async Task MainAsync(string[] args)
         {
@@ -77,7 +109,7 @@ namespace ConsoleApp.AzureGremlin
             Console.WriteLine($"documentCollection:{documentCollection}");
             Console.WriteLine("------------------------------------");
 
-           var client = new DocumentClient(new Uri(documentsEndpoint), graphDbKey);
+            var client = new DocumentClient(new Uri(documentsEndpoint), graphDbKey);
             Database database = await client.CreateDatabaseIfNotExistsAsync(new Database { Id = databaseName });
             DocumentCollection graph = await client.CreateDocumentCollectionIfNotExistsAsync(
                 UriFactory.CreateDatabaseUri(databaseName),
@@ -143,7 +175,7 @@ namespace ConsoleApp.AzureGremlin
                 }
             }
 
-           
+
             Console.WriteLine($"C# function processed: NortonGraphHttpTrigger2");
 
         }
