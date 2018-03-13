@@ -19,13 +19,31 @@ namespace ConsoleApp.AzureGremlin
         static Dictionary<string, string> GremlinQueries = new Dictionary<string, string>
         {
             { "Cleanup",        "g.V().drop()" },
+
             { "AddVertex 1",    "g.addV('person').property('id', 'thomas').property('firstName', 'Thomas').property('age', 44)" },
             { "AddVertex 2",    "g.addV('person').property('id', 'mary').property('firstName', 'Mary').property('lastName', 'Andersen').property('age', 39)" },
             { "AddVertex 3",    "g.addV('person').property('id', 'ben').property('firstName', 'Ben').property('lastName', 'Miller')" },
             { "AddVertex 4",    "g.addV('person').property('id', 'robin').property('firstName', 'Robin').property('lastName', 'Wakefield')" },
+
+            { "AddVertex 5",    "g.addV('person').property('id', 'bill').property('firstName', 'Bill').property('lastName', 'Smith')" },
+            { "AddVertex 6",    "g.addV('person').property('id', 'debbie').property('firstName', 'Debbie').property('lastName', 'Smith')" },
+
+            { "AddVertex 7",    "g.addV('person').property('id', 'luke').property('firstName', 'Luke').property('lastName', 'Smith')" },
+            { "AddVertex 8",    "g.addV('person').property('id', 'sally').property('firstName', 'Sally').property('lastName', 'Smith')" },
+
             { "AddEdge 1",      "g.V('thomas').addE('knows').to(g.V('mary'))" },
             { "AddEdge 2",      "g.V('thomas').addE('knows').to(g.V('ben'))" },
             { "AddEdge 3",      "g.V('ben').addE('knows').to(g.V('robin'))" },
+
+            { "AddEdge 4",      "g.V('bill').addE('married to').to(g.V('debbie'))" },
+            { "AddEdge 5",      "g.V('debbie').addE('married to').to(g.V('bill'))" },
+
+            { "AddEdge 6",      "g.V('bill').addE('parent of').to(g.V('luke'))" },
+            { "AddEdge 7",      "g.V('debbie').addE('parent of').to(g.V('luke'))" },
+
+            { "AddEdge 8",      "g.V('luke').addE('married to').to(g.V('sally'))" },
+            { "AddEdge 9",      "g.V('sally').addE('married to').to(g.V('luke'))" },
+
             { "UpdateVertex",   "g.V('thomas').property('age', 44)" },
             { "CountVertices",  "g.V().count()" },
             { "Filter Range",   "g.V().hasLabel('person').has('age', gt(40))" },
@@ -38,7 +56,7 @@ namespace ConsoleApp.AzureGremlin
             { "CountEdges",     "g.E().count()" },
             { "DropVertex",     "g.V('thomas').drop()" },
         };
- 
+
 
         static async Task MainAsync(string[] args)
         {
@@ -86,7 +104,11 @@ namespace ConsoleApp.AzureGremlin
             };
             var query1 = QueryAddVertex("user", data);
             var query2 = QueryAddVertex("user", data2);
+            var resp = await client.CreateGremlinQuery<Vertex>(graph, query1).ExecuteNextAsync();
+            Console.WriteLine($"C# function processed: {resp.ActivityId}");
 
+            var resp2 = await client.CreateGremlinQuery<Vertex>(graph, query2).ExecuteNextAsync();
+            Console.WriteLine($"C# function processed: {resp2.ActivityId}");
 
             foreach (KeyValuePair<string, string> gremlinQuery in GremlinQueries)
             {
@@ -121,11 +143,7 @@ namespace ConsoleApp.AzureGremlin
                 }
             }
 
-            var resp = await client.CreateGremlinQuery<Vertex>(graph, query1).ExecuteNextAsync();
-            Console.WriteLine($"C# function processed: {resp.ActivityId}");
-
-            var resp2 = await client.CreateGremlinQuery<Vertex>(graph, query2).ExecuteNextAsync();
-            Console.WriteLine($"C# function processed: {resp2.ActivityId}");
+           
             Console.WriteLine($"C# function processed: NortonGraphHttpTrigger2");
 
         }
