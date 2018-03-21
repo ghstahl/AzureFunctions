@@ -3,15 +3,85 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net.Http;
+using System.ServiceModel.Channels;
+using System.Text;
 using System.Threading.Tasks;
 using Gremlin.Net;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
 
 namespace FunctionAppGraph
 {
+    public class MetaData
+    {
+        public string Category { get; set; }
+        public string Version { get; set; }
+    }
+    public class MessageModel
+    {
+        public MetaData MetaData { get; set; }
+        public object Data { get; set; }
+    }
+
+    public class ThunderDomeDirtyHttpTrigger
+    {
+        [FunctionName("ThunderDomeDirtyHttpTrigger")]
+        public static async Task RunAsync(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequestMessage req,
+            TraceWriter log)
+        {
+            IQueueClient queueClient;
+            string queueName = "users";
+            string serviceBusConnectionString =
+                ConfigurationManager.AppSettings["p7graph_RootManageSharedAccessKey_SERVICEBUS"];
+            queueClient = new QueueClient(serviceBusConnectionString, queueName);
+
+            // Send messages.
+            await SendMessagesAsync(queueClient,1);
+        }
+
+        static async Task SendMessagesAsync(IQueueClient queueClient,int numberOfMessagesToSend)
+        {
+            try
+            {
+                for (var i = 0; i < numberOfMessagesToSend; i++)
+                {
+                    // Create a new message to send to the queue.
+
+                    string data = $"Message {i} created at: {DateTime.Now}";
+
+                    var messageModel = new MessageModel
+                    {
+                        MetaData = new MetaData()
+                        {
+                            Category = "Test Blaster",
+                            Version = "0.0.0.1"
+                        },
+                        Data = data
+                    };
+
+                    var messageBody = JsonConvert.SerializeObject(messageModel);
+
+                    var message = new Microsoft.Azure.ServiceBus.Message(Encoding.UTF8.GetBytes(messageBody));
+
+                    // Write the body of the message to the console.
+                    Console.WriteLine($"Sending message: {messageBody}");
+
+                    // Send the message to the queue.
+                    await queueClient.SendAsync(message);
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"{DateTime.Now} :: Exception: {exception.Message}");
+            }
+        }
+    }
+
+
     public class NortonGraphHttpTrigger
     {
         private static Dictionary<string, string> GremlinQueries = new Dictionary<string, string>
@@ -110,7 +180,7 @@ namespace FunctionAppGraph
                         string output = JsonConvert.SerializeObject(result);
                         log.Info(String.Format("\tResult:\n\t{0}", output));
                     }
-                  
+                 
                 }
             }
         }
