@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gremlin.NetStandard", "Grem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GremlinNetSample", "GremlinNetSample\GremlinNetSample.csproj", "{B0854D92-18C5-4008-B3F4-329B46A6F52D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp.AzureGremlin", "ConsoleApp.AzureGremlin\ConsoleApp.AzureGremlin.csproj", "{C0776A61-423A-400A-9FB7-0836A4A9CBB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B0854D92-18C5-4008-B3F4-329B46A6F52D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0854D92-18C5-4008-B3F4-329B46A6F52D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0854D92-18C5-4008-B3F4-329B46A6F52D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0776A61-423A-400A-9FB7-0836A4A9CBB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0776A61-423A-400A-9FB7-0836A4A9CBB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0776A61-423A-400A-9FB7-0836A4A9CBB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0776A61-423A-400A-9FB7-0836A4A9CBB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
